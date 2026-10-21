@@ -1,0 +1,53 @@
+/* Twist art, batch 3 (see batch3.tsx). Selectors start with .tg and a per-twist class prefix; the end state hangs off .go. */
+
+/* fuel famine: tank drains to 12%, flame shrinks */
+.tg .ff-tank { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; }
+.tg .ff-fill { fill: var(--color-cyan); opacity: 0.6; transform-box: fill-box; transform-origin: 50% 100%; transition: transform 2.4s var(--ease); }
+.go .ff-fill { transform: scaleY(0.12); }
+.tg .ff-tick { stroke: var(--color-line-strong); stroke-width: 2; stroke-linecap: round; }
+.tg .ff-mark { stroke: var(--color-danger); stroke-width: 2; stroke-dasharray: 4 4; stroke-linecap: round; }
+.tg .ff-noz { fill: var(--color-ink-soft); stroke: var(--color-ink); stroke-width: 2; }
+.tg .ff-flame { fill: var(--color-danger); stroke: var(--color-danger); stroke-width: 2; stroke-linejoin: round; transform-box: fill-box; transform-origin: 50% 0; transition: transform 2.4s var(--ease); }
+.go .ff-flame { transform: scaleY(0.16); }
+
+/* budget cut: half the crates are crossed out and fade */
+.tg .bc-hold { fill: none; stroke: var(--color-ink); stroke-width: 2; }
+.tg .bc-box rect { fill: var(--color-surface); stroke: var(--color-ink-soft); stroke-width: 2; }
+.tg .bc-box line { stroke: var(--color-ink-soft); stroke-width: 2; stroke-linecap: round; }
+.tg .bc-cr { transition: opacity 0.8s var(--ease); transition-delay: calc(var(--i) * 140ms + 300ms); }
+.go .bc-cut { opacity: 0.25; }
+.tg .bc-x { stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--i) * 140ms); }
+.go .bc-cut .bc-x { opacity: 1; }
+
+/* second colony: a flag lands, a border appears between the two */
+.tg .sc-ground { fill: var(--color-danger-soft); stroke: var(--color-danger); stroke-width: 2; stroke-linejoin: round; }
+.tg .sc-dome { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; stroke-linejoin: round; }
+.tg .sc-pole, .tg .sc-pole2 { stroke: var(--color-ink); stroke-width: 2; stroke-linecap: round; }
+.tg .sc-flag { stroke-width: 2; stroke-linejoin: round; }
+.tg .sc-f1 { fill: var(--color-cyan); stroke: var(--color-cyan); }
+.tg .sc-f2 { fill: var(--color-danger); stroke: var(--color-danger); }
+.tg .sc-land { opacity: 0; transform: translateY(-70px); transition: transform 1.2s var(--ease), opacity 0.5s var(--ease); }
+.go .sc-land { opacity: 1; transform: none; }
+.tg .sc-border { stroke: var(--color-danger); stroke-width: 2; stroke-dasharray: 5 5; stroke-linecap: round; opacity: 0; transition: opacity 0.8s var(--ease) 1.5s; }
+.go .sc-border { opacity: 1; }
+
+/* meteor strike: 13 of 20 dome panels crack and fall */
+.tg .ms-base { stroke: var(--color-ink); stroke-width: 2; stroke-linecap: round; }
+.tg .ms-p { fill: var(--color-cyan); fill-opacity: 0.55; stroke: var(--color-ink); stroke-width: 2; stroke-linejoin: round; transform-box: fill-box; transform-origin: 50% 50%; transition: transform 1.2s var(--ease), opacity 1.2s var(--ease), fill 0.3s, stroke 0.3s; transition-delay: calc(var(--i) * 120ms + 900ms); }
+.go .ms-gone { fill: var(--color-danger-soft); fill-opacity: 1; stroke: var(--color-danger); transform: translateY(10px); opacity: 0; }
+.tg .ms-ghost { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; opacity: 0; transition: opacity 0.8s var(--ease); transition-delay: calc(var(--i) * 120ms + 1500ms); }
+.go .ms-ghost { opacity: 0.55; }
+.tg .ms-streak { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
+.tg .ms-rock { fill: var(--color-danger); opacity: 0; }
+/* streak and rock exist only during the hit, so the end state is the broken dome */
+.go .ms-streak { animation: ms-streak 1s var(--ease) 0.1s both; }
+.go .ms-rock { animation: ms-rock 1s var(--ease) 0.1s both; }
+@keyframes ms-streak { 0% { opacity: 1; stroke-dashoffset: 1; } 70% { opacity: 1; stroke-dashoffset: 0; } 100% { opacity: 0; stroke-dashoffset: 0; } }
+@keyframes ms-rock { 0% { opacity: 1; transform: translate(38px, -86px); } 70% { opacity: 1; transform: none; } 100% { opacity: 0; transform: none; } }
+
+/* sabotage: 4 of 10 status lights flip to red */
+.tg .sb-box { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; transition: stroke 0.4s var(--ease); transition-delay: calc(var(--i) * 150ms + 300ms); }
+.tg .sb-line { stroke: var(--color-line-strong); stroke-width: 2; stroke-linecap: round; }
+.tg .sb-led { fill: var(--color-cyan); transition: fill 0.4s var(--ease); transition-delay: calc(var(--i) * 150ms + 300ms); }
+.go .sb-bad .sb-led { fill: var(--color-danger); }
+.go .sb-bad .sb-box { stroke: var(--color-danger); }

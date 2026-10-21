@@ -1,0 +1,28 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "timeauction",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "event-server",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "TIMEAUCTION_ADMIN_PIN=123456",
+        "node",
+        "server/index.ts"
+      ],
+      "port": 8787
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+/* Twist art, batch 1 (see batch1.tsx). Selectors start with .tg and a per-twist class prefix; the end state hangs off .go. */
+/* dust winter: dust slides in, 9 of 10 rays fade */
+.tg .dw-sun { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; }
+.tg .dw-ray { stroke: var(--color-ink); stroke-width: 2; stroke-linecap: round; transition: opacity 0.7s var(--ease); transition-delay: calc(var(--i) * 140ms); }
+.go .dw-off { opacity: 0.1; }
+.tg .dw-band { fill: var(--color-ink-soft); opacity: 0; transform: translateX(var(--dx)); transition: transform 2s var(--ease), opacity 1.6s var(--ease); transition-delay: calc(var(--i) * 250ms); }
+.go .dw-band { opacity: 0.75; transform: translateX(0); }
+/* pandemic aboard: 6 of 10 crew move into isolation */
+.tg .pa-ward { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-dasharray: 4 4; opacity: 0.25; transition: opacity 0.8s var(--ease); }
+.go .pa-ward { opacity: 1; }
+.tg .pa-p { fill: var(--color-ink); transition: transform 1.6s var(--ease), fill 0.6s var(--ease); transition-delay: calc(var(--i) * 150ms); }
+.go .pa-sick { fill: var(--color-danger); transform: translate(var(--dx), var(--dy)); }
+/* reactor ban: BANNED stamps on the dome, all 5 licences void */
+.tg .rb-dome { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; stroke-linejoin: round; transition: fill 0.6s var(--ease) 1s; }
+.go .rb-dome { fill: var(--color-danger-soft); }
+.tg .rb-base { fill: var(--color-ink); }
+.tg .rb-atom ellipse { fill: none; stroke: var(--color-cyan); stroke-width: 2; }
+.tg .rb-nuc { fill: var(--color-cyan); }
+.tg .rb-stamp { transform-box: fill-box; transform-origin: 50% 50%; transform: scale(1.8); opacity: 0; transition: transform 0.5s var(--ease) 0.6s, opacity 0.3s var(--ease) 0.6s; }
+.go .rb-stamp { transform: scale(1); opacity: 1; }
+.tg .rb-stamp rect { fill: var(--color-danger); }
+.tg .rb-stamp .t { fill: var(--color-surface); }
+.tg .rb-card rect { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; transition: stroke 0.5s var(--ease), fill 0.5s var(--ease); transition-delay: calc(var(--i) * 150ms + 1.2s); }
+.tg .rb-card path { fill: none; stroke: var(--color-line-strong); stroke-width: 2; stroke-linecap: round; }
+.go .rb-card rect { stroke: var(--color-danger); fill: var(--color-danger-soft); }
+.tg .rb-void { stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--i) * 150ms + 1.3s); }
+.go .rb-void { opacity: 1; }
+/* regolith toxic: 19 of 20 cells turn hatched red, 1 stays safe */
+.tg .rt-top { stroke: var(--color-ink); stroke-width: 2; stroke-linecap: round; }
+.tg .rt-c rect { fill: var(--color-cyan); fill-opacity: 0.35; stroke: var(--color-cyan); stroke-width: 2; transition: fill 0.5s var(--ease), stroke 0.5s var(--ease), fill-opacity 0.5s var(--ease); transition-delay: calc(var(--i) * 80ms); }
+.go .rt-c:not(.rt-safe) rect { fill: var(--color-danger-soft); fill-opacity: 1; stroke: var(--color-danger); }
+.go .rt-safe rect { fill-opacity: 0.6; }
+.tg .rt-h { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--i) * 80ms + 200ms); }
+.go .rt-h { opacity: 1; }
+/* launch window missed: the window arc slides past the rocket, 26 month ticks empty */
+.tg .lw-orbit { fill: none; stroke: var(--color-line-strong); stroke-width: 2; }
+.tg .lw-sun { fill: var(--color-ink-soft); }
+.tg .lw-mars { fill: var(--color-danger-soft); stroke: var(--color-danger); stroke-width: 2; }
+.tg .lw-earth { fill: var(--color-cyan); }
+.tg .lw-rocket { fill: var(--color-ink); stroke: var(--color-ink); stroke-width: 2; stroke-linejoin: round; }
+.tg .lw-arc { fill: none; stroke: var(--color-cyan); stroke-width: 4; stroke-linecap: round; transform-origin: 60px 72px; transform: rotate(-50deg); transition: transform 2.4s var(--ease), stroke 0.6s var(--ease) 1.8s; }
+.go .lw-arc { transform: rotate(50deg); stroke: var(--color-danger); }
+.tg .lw-m { stroke: var(--color-cyan); stroke-width: 2; stroke-linecap: round; transition: stroke 0.3s var(--ease), opacity 0.3s var(--ease); transition-delay: calc(var(--i) * 80ms); }
+.go .lw-m { stroke: var(--color-line-strong); opacity: 0.35; }

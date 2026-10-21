@@ -1,0 +1,41 @@
+/* Twist art, batch 4 (see batch4.tsx). Selectors start with .tg and a per-twist class prefix; the end state hangs off .go. */
+
+/* corporate-takeover: 4 of 5 sections get locked */
+.tg .ct-r { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; transition: fill 0.5s var(--ease); transition-delay: calc(var(--i) * 350ms); }
+.go .ct-lk .ct-r { fill: var(--color-danger-soft); }
+.tg .ct-l { fill: none; stroke: var(--color-cyan); stroke-width: 2; stroke-linecap: round; }
+.tg .ct-k { opacity: 0; transform: translateY(-8px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); transition-delay: calc(var(--i) * 350ms + 150ms); }
+.go .ct-k { opacity: 1; transform: none; }
+.tg .ct-sh { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; }
+.tg .ct-b { fill: var(--color-danger); }
+.tg .ct-c { fill: var(--color-surface); }
+
+/* cyberattack: red spreads along the links */
+.tg .cy-e { stroke: var(--color-line-strong); stroke-width: 2; stroke-linecap: round; transition: stroke 0.4s var(--ease); transition-delay: calc(var(--i) * 150ms - 100ms); }
+.go .cy-e { stroke: var(--color-danger); }
+.tg .cy-n { fill: var(--color-cyan); stroke: var(--color-ink); stroke-width: 2; transition: fill 0.4s var(--ease); transition-delay: calc(var(--i) * 150ms); }
+.go .cy-n { fill: var(--color-danger); }
+
+/* crop-blight: spots, then the stalks wilt and fall */
+.tg .cb-g { stroke: var(--color-line-strong); stroke-width: 2; stroke-linecap: round; }
+.tg .cb-p { transform-box: fill-box; transform-origin: 50% 100%; transition: transform 0.9s var(--ease), opacity 0.9s var(--ease); transition-delay: calc(var(--i) * 120ms + 450ms); }
+.go .cb-p { transform: rotate(var(--rot)); opacity: 0.35; }
+.tg .cb-s { fill: none; stroke: var(--color-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.5s var(--ease); transition-delay: calc(var(--i) * 120ms + 450ms); }
+.go .cb-s { stroke: var(--color-danger); }
+.tg .cb-h { fill: var(--color-ink); transition: fill 0.5s var(--ease); transition-delay: calc(var(--i) * 120ms + 450ms); }
+.go .cb-h { fill: var(--color-danger); }
+.tg .cb-x { fill: var(--color-danger); opacity: 0; transition: opacity 0.4s var(--ease); transition-delay: calc(var(--i) * 120ms); }
+.go .cb-x { opacity: 1; }
+
+/* ice-runs-dry: the ice shrinks to 30% of the mapped area (scale sqrt(.3) = .5477) */
+.tg .ir-o { fill: none; stroke: var(--color-ink-soft); stroke-width: 2; stroke-dasharray: 5 4; stroke-linecap: round; }
+.tg .ir-i { fill: var(--color-cyan); opacity: 0.7; transform-box: fill-box; transform-origin: 50% 50%; transition: transform 2.4s var(--ease); }
+.go .ir-i { transform: scale(0.5477); }
+
+/* power-grid-cascade: failure runs along the wires, 3 of 20 stay lit */
+.tg .pg-w { stroke: var(--color-cyan); stroke-width: 2; stroke-linecap: round; }
+.tg .pg-w.pg-d { transition: stroke 0.3s var(--ease); transition-delay: calc(var(--i) * 100ms); }
+.go .pg-w.pg-d { stroke: var(--color-line-strong); }
+.tg .pg-b { fill: var(--color-cyan); stroke: var(--color-ink); stroke-width: 2; }
+.tg .pg-b.pg-d { transition: fill 0.3s var(--ease), stroke 0.3s var(--ease); transition-delay: calc(var(--i) * 100ms + 100ms); }
+.go .pg-b.pg-d { fill: var(--color-danger-soft); stroke: var(--color-line-strong); }

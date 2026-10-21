@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TimeAuction Banner</title>
+<style>
+  @font-face { font-family: 'Instrument Serif'; font-style: normal; src: url('../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Instrument Serif'; font-style: italic; src: url('../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 100 900; src: url('../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2'); }
+  :root { --bg: #050a1c; --bg2: #0b1736; --fg: #f3f6fc; --muted: rgb(214 225 243 / 0.72); --accent: #a3c6ef; --galaxy: #6f8fd8; --pa: #dbe8fb; --pb: #1b2d5c; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1280px; height: 480px; overflow: hidden; background: var(--bg); }
+  body { position: relative; font-family: Inter, system-ui, sans-serif; color: var(--fg);
+    background: radial-gradient(70% 120% at 78% 50%, var(--bg2) 0%, transparent 60%), radial-gradient(60% 90% at 0% 100%, #0d1a3f 0%, transparent 55%), var(--bg); }
+  .aurora { position: absolute; inset: -20%; filter: blur(70px); opacity: 0.85; }
+  .aurora i { position: absolute; border-radius: 50%; mix-blend-mode: screen; }
+  .aurora i:nth-child(1) { left: 5%; top: 10%; width: 55%; height: 50%; background: radial-gradient(closest-side, rgb(163 198 239 / 0.3), transparent); }
+  .aurora i:nth-child(2) { right: 0; top: 30%; width: 40%; height: 60%; background: radial-gradient(closest-side, rgb(236 96 140 / 0.22), transparent); }
+  #stars { position: absolute; inset: 0; width: 1280px; height: 480px; }
+  .shot { position: absolute; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, rgb(225 238 255 / 0.95)); filter: drop-shadow(0 0 6px rgb(163 198 239 / 0.9)); }
+  .copy { position: absolute; left: 72px; top: 50%; translate: 0 -50%; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { width: 44px; height: 44px; border-radius: 10px; box-shadow: 0 0 24px rgb(163 198 239 / 0.35); }
+  .eyebrow { font-size: 14px; font-weight: 500; letter-spacing: 0.32em; text-transform: uppercase; color: var(--muted); }
+  .mark { display: block; margin-top: 18px; font-family: 'Instrument Serif', serif; font-size: 124px; line-height: 0.95; filter: drop-shadow(0 0 30px rgb(163 198 239 / 0.35)); }
+  .mark em { color: var(--accent); }
+  .tag { margin-top: 14px; font-family: 'Instrument Serif', serif; font-size: 38px; }
+  .tag em { color: var(--accent); }
+  .steps { margin-top: 26px; font-size: 13px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
+  .steps span { color: var(--accent); padding: 0 10px; }
+  svg.orbits { position: absolute; left: 960px; top: 250px; width: 620px; height: 620px; translate: -50% -50%; overflow: visible; }
+  .orbit { fill: none; stroke: rgb(163 198 239 / 0.42); stroke-width: 2; stroke-dasharray: 4 10; }
+  .body circle { fill: #fff; filter: drop-shadow(0 0 8px rgb(163 198 239 / 0.95)) drop-shadow(0 0 20px rgb(163 198 239 / 0.5)); }
+  .body text { fill: var(--fg); font-family: 'Instrument Serif', serif; font-size: 36px; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+  <div class="aurora"><i></i><i></i></div>
+  <canvas id="stars" width="2560" height="960"></canvas>
+  <div class="shot" style="left: 560px; top: 70px; width: 160px; rotate: -20deg"></div>
+  <div class="shot" style="left: 1130px; top: 400px; width: 120px; rotate: -26deg; opacity: 0.7"></div>
+
+  <div class="copy">
+    <div class="brand"><img src="logo.svg" alt=""><p class="eyebrow">Engineering Across Time</p></div>
+    <span class="mark">Time<em>Auction</em></span>
+    <p class="tag">The Future Is Yours <em>to Engineer.</em></p>
+    <p class="steps">Bid across eras<span>·</span>Survive the twist<span>·</span>Engineer the future</p>
+  </div>
+
+  <svg class="orbits" viewBox="-520 -520 1040 1040" aria-hidden="true">
+    <defs>
+      <radialGradient id="pl" cx="0.36" cy="0.32" r="0.8"><stop offset="0" stop-color="var(--pa)"/><stop offset="0.55" stop-color="var(--pb)"/><stop offset="1" stop-color="var(--bg)"/></radialGradient>
+      <radialGradient id="halo"><stop offset="0.55" stop-color="var(--galaxy)" stop-opacity="0.3"/><stop offset="1" stop-color="var(--galaxy)" stop-opacity="0"/></radialGradient>
+    </defs>
+    <circle r="250" fill="url(#halo)"/>
+    <circle r="150" fill="url(#pl)"/>
+    <g id="orbits"></g>
+  </svg>
+
+<script>
+  // Same orbits as the poster and the projector Welcome stage: [rx, ry, tilt°, eras, angles].
+  const ORBITS = [[430, 120, -16, [1880, 2080], [200, 20]], [370, 190, 22, [1920, 2040], [250, 70]], [300, 88, 6, [1960, 2010], [320, 140]]]
+  const g = document.getElementById('orbits'), NS = 'http://www.w3.org/2000/svg'
+  for (const [rx, ry, tilt, eras, at] of ORBITS) {
+    const e = document.createElementNS(NS, 'ellipse')
+    e.setAttribute('class', 'orbit'); e.setAttribute('rx', rx); e.setAttribute('ry', ry); e.setAttribute('transform', `rotate(${tilt})`)
+    g.append(e)
+    eras.forEach((era, i) => {
+      const t = (at[i] * Math.PI) / 180, k = (tilt * Math.PI) / 180
+      const x0 = rx * Math.cos(t), y0 = ry * Math.sin(t)
+      const b = document.createElementNS(NS, 'g'); b.setAttribute('class', 'body')
+      b.setAttribute('transform', `translate(${x0 * Math.cos(k) - y0 * Math.sin(k)} ${x0 * Math.sin(k) + y0 * Math.cos(k)})`)
+      b.innerHTML = `<circle r="10"/><text y="-24" text-anchor="middle">${era}</text>`
+      g.append(b)
+    })
+  }
+  const c = document.getElementById('stars'), x = c.getContext('2d')
+  let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
+  for (let i = 0; i < 420; i++) {
+    const r = rnd() < 0.92 ? rnd() * 1.6 + 0.4 : rnd() * 2.4 + 1.6
+    x.globalAlpha = 0.25 + rnd() * 0.75
+    x.fillStyle = rnd() < 0.15 ? '#cfe0ff' : '#ffffff'
+    if (r > 2) { x.shadowColor = '#a3c6ef'; x.shadowBlur = 12 } else x.shadowBlur = 0
+    x.beginPath(); x.arc(rnd() * 2560, rnd() * 960, r, 0, 6.283); x.fill()
+  }
+</script>
+</body>
+</html>

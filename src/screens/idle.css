@@ -1,0 +1,34 @@
+/* Idle attract screen (#/idle). Sizes in vh/vw so it scales from 1920x1080. */
+.idle { position: fixed; inset: 0; z-index: 90; width: 100vw; height: 100vh; overflow: hidden; transition: opacity 0.4s ease, transform 0.4s ease; }
+.idle.idle-hide-cursor, .idle.idle-hide-cursor * { cursor: none; }
+.idle.idle-leave { opacity: 0; transform: scale(1.12); }
+.idle-shots { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.idle-center { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; text-align: center; }
+.idle-ring { position: absolute; left: 50%; top: 50%; width: 118vh; height: 118vh; translate: -50% -50%; animation: idle-spin 120s linear infinite; }
+/* Labels counter-spin around their own centre so they stay upright while the ring turns. */
+.idle-ring text { transform-box: fill-box; transform-origin: center; animation: idle-spin 120s linear infinite reverse; fill: var(--l-accent); font-family: var(--font-display); font-size: 30px; letter-spacing: 0.08em; }
+.idle-ring-b { width: 86vh; height: 86vh; animation-duration: 80s; animation-direction: reverse; opacity: 0.7; }
+.idle-ring-b text { animation-duration: 80s; animation-direction: normal; fill: var(--l-muted); font-size: 24px; }
+.idle-shine em { color: inherit; }
+.idle-eyebrow { font-size: clamp(14px, 2.2vh, 28px); font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--l-muted); }
+.idle-title { display: block; margin-top: 2vh; font-size: clamp(3rem, 15vh, 11rem); animation: idle-glow 6s ease-in-out infinite; }
+.idle-title .idle-shine { background: linear-gradient(100deg, var(--l-fg) 35%, var(--l-accent) 50%, var(--l-fg) 65%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: idle-shimmer 7s linear infinite; }
+.idle-tag { position: relative; height: 8vh; margin-top: 3vh; width: 80vw; }
+.idle-tag span { position: absolute; inset: 0; font-family: var(--font-display); font-size: clamp(1.6rem, 5.6vh, 4.4rem); opacity: 0; animation: idle-tag 12s ease-in-out infinite; }
+.idle-tag span:nth-child(2) { animation-delay: 4s; }
+.idle-tag span:nth-child(3) { animation-delay: 8s; }
+.idle-tag em { color: var(--l-accent); }
+.idle-prompt { margin-top: 5vh; font-size: clamp(10px, 1.1vh, 13px); letter-spacing: 0.35em; text-transform: uppercase; color: var(--l-muted); opacity: 0.55; }
+.idle-coins { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.idle-coin { position: absolute; bottom: -8vh; left: var(--x); width: var(--s); height: var(--s); display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--l-line-strong); background: radial-gradient(circle at 30% 30%, rgb(255 255 255 / 0.35), rgb(163 198 239 / 0.12) 60%); color: var(--l-accent); font-size: calc(var(--s) * 0.34); font-weight: 600; box-shadow: 0 0 2vh rgb(163 198 239 / 0.25); opacity: 0; animation: idle-float var(--d) linear var(--delay) infinite; }
+.idle-coin::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(115deg, transparent 40%, rgb(255 255 255 / 0.7) 50%, transparent 60%); background-size: 250% 100%; animation: idle-shimmer 4s linear var(--delay) infinite; mix-blend-mode: overlay; }
+@keyframes idle-spin { to { transform: rotate(360deg); } }
+@keyframes idle-glow { 0%, 100% { filter: drop-shadow(0 0 1.2vh rgb(163 198 239 / 0.25)); } 50% { filter: drop-shadow(0 0 4vh rgb(163 198 239 / 0.6)); } }
+@keyframes idle-shimmer { from { background-position: 150% 0; } to { background-position: -100% 0; } }
+@keyframes idle-tag { 0% { opacity: 0; transform: translateY(1.5vh); } 8%, 28% { opacity: 1; transform: none; } 36%, 100% { opacity: 0; transform: translateY(-1.5vh); } }
+@keyframes idle-float { 0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(0); } 10%, 85% { opacity: 0.85; } 100% { opacity: 0; transform: translate3d(var(--dx), -115vh, 0) rotate(var(--r)); } }
+@media (prefers-reduced-motion: reduce) {
+  .idle, .idle * , .idle *::after { animation: none !important; transition: none !important; }
+  .idle-tag span:first-child { opacity: 1; }
+  .idle-coin { display: none; }
+}

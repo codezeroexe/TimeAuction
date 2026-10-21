@@ -1,0 +1,679 @@
+@import "tailwindcss";
+@import "./components/game/twistArt/batch1.css";
+@import "./components/game/twistArt/batch2.css";
+@import "./components/game/twistArt/batch3.css";
+@import "./components/game/twistArt/batch4.css";
+@import "./components/game/twistArt/batch5.css";
+@source not "../event-data";
+@source not "../server";
+
+@theme {
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: Consolas, "Cascadia Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Game interface — light mode only */
+  --color-paper: #f7f6f2;
+  --color-surface: #ffffff;
+  --color-ink: #0e1a33;
+  --color-ink-soft: #3d4862;
+  --color-muted: #687189;
+  --color-line: #e2e0d9;
+  --color-line-strong: #c9c6bd;
+  --color-accent: #2b55a0;
+  --color-accent-hover: #21457f;
+  --color-accent-soft: #edf2fa;
+  --color-danger: #a8261d;
+  --color-danger-soft: #fbefed;
+  --color-success: #2f6b46;
+  --color-cyan: #1f7f95;
+  --radius-panel: 10px;
+}
+
+html {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Landing page — themeable universe (dark by default) */
+.landing {
+  --l-bg: #050a1c;
+  --l-bg-2: #0b1736;
+  --l-fg: #f3f6fc;
+  --l-muted: rgb(214 225 243 / 0.72);
+  --l-faint: rgb(214 225 243 / 0.5);
+  --l-accent: #a3c6ef;
+  --l-line: rgb(170 200 240 / 0.16);
+  --l-line-strong: rgb(170 200 240 / 0.34);
+  --l-star: #ffffff;
+  --l-galaxy: #6f8fd8;
+  --l-planet-a: #dbe8fb;
+  --l-planet-b: #1b2d5c;
+  --l-cta-bg: #f3f6fc;
+  --l-cta-fg: #071029;
+  --l-cta-hover: #d9e6f8;
+  --l-panel: #0a1430;
+  --l-cyan: #7fd6e4;
+  --l-violet: #8c7ad8;
+  color-scheme: dark;
+  background:
+    radial-gradient(120% 80% at 75% 20%, var(--l-bg-2) 0%, transparent 60%),
+    radial-gradient(90% 70% at 10% 100%, #0a1a3d 0%, transparent 70%),
+    var(--l-bg);
+  color: var(--l-fg);
+}
+
+.landing[data-theme="light"] {
+  --l-bg: #eef2f9;
+  --l-bg-2: #ffffff;
+  --l-fg: #0b1630;
+  --l-muted: rgb(28 42 76 / 0.76);
+  --l-faint: rgb(28 42 76 / 0.55);
+  --l-accent: #2b55a0;
+  --l-line: rgb(30 55 110 / 0.14);
+  --l-line-strong: rgb(30 55 110 / 0.3);
+  --l-star: #1d2d58;
+  --l-galaxy: #8ea6d8;
+  --l-planet-a: #ffffff;
+  --l-planet-b: #9fb4dc;
+  --l-cta-bg: #0b1630;
+  --l-cta-fg: #ffffff;
+  --l-cta-hover: #1d2d58;
+  --l-panel: #ffffff;
+  --l-cyan: #1f7f95;
+  --l-violet: #6a58b8;
+  color-scheme: light;
+  background:
+    radial-gradient(120% 80% at 75% 20%, var(--l-bg-2) 0%, transparent 60%),
+    radial-gradient(90% 70% at 10% 100%, #dfe7f5 0%, transparent 70%),
+    var(--l-bg);
+}
+
+.landing :focus-visible {
+  outline-color: var(--l-accent);
+}
+
+/* ---------- Landing motion ----------
+   One direction for everything: the dial turns clockwise and the sky drifts toward the lower left,
+   as if the viewer is slowly travelling. All transforms, no layout work. */
+
+@keyframes spin { from { rotate: 0deg; } to { rotate: 360deg; } }
+@keyframes spin-back { from { rotate: 0deg; } to { rotate: -360deg; } }
+@keyframes orbit-body {
+  from { transform: rotate(0deg) scaleY(var(--squash)); }
+  to { transform: rotate(-360deg) scaleY(var(--squash)); }
+}
+@keyframes orbit-body-back {
+  from { transform: rotate(0deg) scaleY(var(--squash)); }
+  to { transform: rotate(360deg) scaleY(var(--squash)); }
+}
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(calc(var(--drift) * -1), calc(var(--drift) * 0.45), 0); }
+}
+@keyframes nebula {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-6%, 4%, 0) scale(1.12); }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translate3d(0, 18px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes dial-in {
+  from { opacity: 0; transform: scale(0.94) rotate(-8deg); }
+  to { opacity: 1; transform: none; }
+}
+
+.chrono-primary { animation: spin 40s linear infinite; }
+.chrono-secondary { animation: spin-back 64s linear infinite; }
+.chrono-inner { animation: spin 110s linear infinite; }
+.chrono-orbit.chrono-orbit-a { animation: spin 16s linear infinite; }
+.chrono-orbit-body.chrono-orbit-a { animation: orbit-body 16s linear infinite; }
+.chrono-orbit.chrono-orbit-b { animation: spin-back 26s linear infinite; }
+.chrono-orbit-body.chrono-orbit-b { animation: orbit-body-back 26s linear infinite; }
+.chrono-primary,
+.chrono-secondary,
+.chrono-inner,
+.chrono-orbit { will-change: rotate; }
+.chrono-orbit-body { transform: scaleY(var(--squash)); }
+
+/* Pointer parallax: --px/--py run from -1 to 1 and are set on .landing by the page. */
+.landing { --px: 0; --py: 0; }
+.star-layer { position: absolute; inset: 0; animation: drift var(--speed) ease-in-out infinite alternate; }
+.star-far { --drift: 18px; --speed: 140s; translate: calc(var(--px) * -4px) calc(var(--py) * -3px); }
+.star-mid { --drift: 36px; --speed: 95s; translate: calc(var(--px) * -10px) calc(var(--py) * -7px); }
+.star-near { --drift: 60px; --speed: 70s; translate: calc(var(--px) * -18px) calc(var(--py) * -12px); }
+.parallax-dial { translate: calc(var(--px) * 12px) calc(var(--py) * 9px); }
+.parallax-copy { translate: calc(var(--px) * -3px) calc(var(--py) * -2px); }
+.star-layer,
+.parallax-dial,
+.parallax-copy { transition: translate 600ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+.nebula {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  animation: nebula 60s ease-in-out infinite alternate;
+}
+.nebula-a { left: 52%; top: -10%; width: 55%; height: 70%; background: radial-gradient(closest-side, color-mix(in oklab, var(--l-cyan) 16%, transparent), transparent); }
+.nebula-b { left: -12%; top: 55%; width: 50%; height: 60%; background: radial-gradient(closest-side, color-mix(in oklab, var(--l-violet) 14%, transparent), transparent); animation-duration: 80s; animation-direction: alternate-reverse; }
+
+/* Entrance: staggered rise, exponential ease-out. */
+.enter { animation: rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 110ms + 80ms); }
+.enter-dial { animation: dial-in 1400ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both; }
+
+/* Scroll reveal: only armed once the observer is running, so content is never hidden without it. */
+.reveal-armed [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1), transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+.reveal-armed [data-reveal].is-in { opacity: 1; transform: none; }
+
+/* Phone: the planet becomes the backdrop, copy and actions sit at the thumb. */
+@media (max-width: 767px) {
+  .hero5 { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(100svh - 4rem); overflow: hidden; padding-bottom: 1.5rem; }
+  .hero-dial { position: absolute; width: 128%; max-width: none; right: -34%; top: -4%; opacity: 0.9; z-index: 0; pointer-events: none; mask-image: linear-gradient(to bottom, #000 55%, transparent 92%); }
+}
+
+/* Navigation underline that grows from the left. */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.35rem;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-link:hover::after,
+.nav-link:focus-visible::after { transform: scaleX(1); }
+
+/* Landing CTAs: a slight lift, a sliding arrow, a clear press. */
+.cta { transition: background-color 200ms, border-color 200ms, color 200ms, transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms; }
+.cta:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -14px color-mix(in oklab, var(--l-cyan) 70%, transparent); }
+.cta:active { transform: translateY(0) scale(0.985); box-shadow: none; transition-duration: 60ms; }
+.cta .cta-arrow { transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); }
+.cta:hover .cta-arrow { transform: translateX(4px); }
+
+/* ---------- Landing sections (v6) ---------- */
+.landing .phand { transform: rotate(var(--ang, 104deg)); transform-origin: 300px 300px; transition: transform 0.5s var(--ease); }
+.landing .lkbd { font-family: var(--font-mono); font-size: 11px; color: var(--l-faint); border: 1px solid var(--l-line-strong); padding: 3px 7px; border-radius: 3px; background: none; transition: color 0.2s, border-color 0.2s; }
+.landing .lkbd:hover { color: var(--l-accent); border-color: var(--l-accent); }
+
+/* Slim bar that slides in after the hero */
+.landing .snav { position: fixed; top: 0; left: 0; right: 0; z-index: 40; display: flex; align-items: center; gap: 14px; padding: 10px 36px; background: color-mix(in oklab, var(--l-bg) 86%, transparent); backdrop-filter: blur(14px); border-bottom: 1px solid var(--l-line); transform: translateY(-110%); transition: transform 0.45s var(--ease); }
+.landing .snav.show { transform: none; }
+@media (max-width: 767px) { .landing .snav { padding: 8px 14px; } }
+
+.landing .resume { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 26px; font-size: 14px; color: var(--l-muted); }
+.landing .resume input { flex: 0 1 250px; min-width: 0; background: none; border: 1px solid var(--l-line-strong); border-radius: 999px; padding: 10px 16px; font: 500 14px var(--font-mono); color: var(--l-fg); caret-color: var(--l-accent); outline: 0; transition: border-color 0.2s, background-color 0.2s; }
+.landing .resume input:focus { border-color: var(--l-accent); background: color-mix(in oklab, var(--l-accent) 10%, transparent); }
+.landing .resume input::placeholder { color: var(--l-faint); }
+@media (max-width: 767px) { .landing .resume input { flex: 1 1 100%; min-height: 48px; font-size: 16px; } .landing .resume label { width: 100%; } }
+
+/* Live ticker */
+.landing .ticker { position: relative; z-index: 3; overflow: hidden; border-block: 1px solid var(--l-line); background: color-mix(in oklab, var(--l-bg) 70%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.landing .ticker > div { display: flex; width: max-content; animation: tick 46s linear infinite; }
+.landing .ticker:hover > div { animation-play-state: paused; }
+.landing .ticker span { padding: 14px 26px; font-size: 14px; color: var(--l-muted); white-space: nowrap; display: inline-flex; align-items: center; gap: 10px; }
+.landing .ticker span::after { content: "·"; margin-left: 26px; color: var(--l-faint); }
+.landing .ticker i { width: 8px; height: 8px; border-radius: 50%; background: #5fd08a; animation: blink 1.6s infinite; }
+@keyframes tick { to { transform: translateX(-50%); } }
+
+.landing .ls { position: relative; z-index: 3; max-width: 1240px; margin: 0 auto; padding: 110px 36px 0; }
+@media (max-width: 767px) { .landing .ls { padding: 64px 20px 0; } }
+.landing .dh { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.1rem, 4.4vw, 3.5rem); line-height: 1.06; letter-spacing: -0.012em; text-wrap: balance; }
+.landing .lbl-l { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--l-faint); }
+
+/* How it works: sticky dial + steps */
+.landing .how { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: 64px; margin-top: 44px; align-items: start; }
+.landing .hd { position: sticky; top: 110px; text-align: center; }
+.landing .hd svg { width: 100%; max-width: 280px; }
+.landing .hh { transition: transform 0.8s var(--ease); }
+.landing .hs { list-style: none; margin: 0; padding: 0; }
+.landing .hs li { display: grid; grid-template-columns: 78px 1fr; gap: 20px; padding: 26px 0 26px 22px; border-left: 2px solid var(--l-line); opacity: 0.42; cursor: pointer; transition: opacity 0.4s, border-color 0.4s, padding 0.5s var(--ease); }
+.landing .hs li.on { opacity: 1; border-color: var(--l-accent); padding-left: 30px; }
+.landing .hs .yr { font: 600 15px var(--font-sans); color: var(--l-accent); padding-top: 5px; }
+.landing .hs h3 { margin: 0; font: 400 1.9rem/1.1 var(--font-display); }
+.landing .hs p { margin: 8px 0 0; color: var(--l-muted); max-width: 46ch; }
+@media (max-width: 767px) {
+  .landing .how { grid-template-columns: 1fr; gap: 0; margin-top: 24px; }
+  .landing .hd { display: none; }
+  .landing .hs li { grid-template-columns: 56px 1fr; gap: 12px; padding: 18px 0 18px 16px; }
+  .landing .hs li.on { padding-left: 20px; }
+  .landing .hs h3 { font-size: 1.5rem; }
+}
+
+/* Mission + sealed twist, scoring */
+.landing .lpn { background: var(--l-panel); border: 1px solid var(--l-line); border-radius: 18px; padding: 30px; }
+.landing .lpn .dh3 { margin: 10px 0 0; font: 400 clamp(1.5rem, 2.6vw, 2.1rem)/1.1 var(--font-display); text-wrap: balance; }
+.landing .lpn ul { margin: 16px 0 0; padding-left: 18px; color: var(--l-muted); }
+.landing .lpn p { color: var(--l-muted); margin: 16px 0 0; }
+.landing .seal { border-style: dashed; border-color: var(--l-line-strong); }
+.landing .red { display: grid; gap: 9px; margin-top: 18px; }
+.landing .red i { height: 13px; border-radius: 4px; background: repeating-linear-gradient(90deg, var(--l-line-strong) 0 46px, transparent 46px 54px); opacity: 0.8; }
+@media (max-width: 767px) { .landing .lpn { padding: 22px 18px; } }
+.landing .rb { display: grid; grid-template-columns: 1fr auto; gap: 6px 14px; padding: 13px 0; border-bottom: 1px solid var(--l-line); }
+.landing .rb > div { grid-column: 1 / -1; height: 5px; border-radius: 3px; background: var(--l-line); }
+.landing .rb i { display: block; height: 100%; border-radius: 3px; background: var(--l-accent); transform-origin: left; transition: transform 1.1s var(--ease) 0.2s; }
+.landing.reveal-armed .rb i { transform: scaleX(0); }
+.landing.reveal-armed .is-in .rb i { transform: none; }
+
+/* ---------- App-wide ---------- */
+
+/* Route change: sections of the new screen settle in one after another. Added by useEnterClass for 1s, never on time-critical updates. */
+.view-enter > * { animation: up 0.75s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.view-enter > *:nth-child(2) { animation-delay: 70ms; }
+.view-enter > *:nth-child(3) { animation-delay: 140ms; }
+.view-enter > *:nth-child(n + 4) { animation-delay: 210ms; }
+/* A filling transform animation would trap fixed children inside their parent, so phones fade only. */
+@media (max-width: 767px) { .view-enter > * { animation-name: mfade; } }
+
+@keyframes up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes mfade { from { opacity: 0; } }
+@keyframes fl6 { 0% { color: var(--color-success); transform: scale(1.08); transform-origin: left center; } }
+@keyframes stamp { from { opacity: 0; transform: translateY(-50%) rotate(-7deg) scale(2.4); } }
+@keyframes out { 30% { border-color: var(--color-danger); background: var(--color-danger-soft); } }
+@keyframes rip { to { transform: scale(7); opacity: 0; } }
+@keyframes rp { from { transform: scale(0.05); opacity: 0; } }
+@keyframes gr { from { transform: scaleX(0); } }
+@keyframes dash { to { stroke-dashoffset: -24; } }
+@keyframes fi { from { opacity: 0; } }
+
+.toast-up { animation: up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.toast-out { opacity: 0; transition: opacity 0.4s; }
+
+/* Auction cues */
+.flash { display: inline-block; animation: fl6 0.7s var(--ease) 1; }
+.seg-lo { animation: blink 0.6s infinite; }
+.out-flash { position: absolute; inset: -1px; z-index: -1; border: 1px solid transparent; border-radius: inherit; pointer-events: none; animation: out 0.5s var(--ease); }
+.log-row { animation: up 0.4s var(--ease) both; }
+.strip .stamp { position: absolute; z-index: 2; right: 20px; top: 50%; transform: translateY(-50%) rotate(-7deg); border: 3px solid var(--color-danger); color: var(--color-danger); font: 700 20px var(--font-sans); letter-spacing: 0.14em; padding: 6px 14px; border-radius: 8px; background: var(--color-surface); animation: stamp 0.5s var(--ease) both; }
+.strip .stamp.won { border-color: var(--color-success); color: var(--color-success); }
+@media (max-width: 767px) { .strip .stamp { right: 12px; font-size: 14px; padding: 4px 9px; } }
+
+@keyframes fade-later { from { opacity: 0; } to { opacity: 1; } }
+.fade-later { animation: fade-later 300ms ease-out 400ms both; }
+
+/* Wallet change note beside a balance: appears, then quietly leaves; the balance itself never animates. */
+@keyframes delta {
+  0% { opacity: 0; transform: translate3d(0, 4px, 0); }
+  12%, 75% { opacity: 1; transform: none; }
+  100% { opacity: 0; }
+}
+.delta { animation: delta 4s ease-out both; }
+
+/* V6 chrome: mono labels, status chips, hash readouts, panels. Layered so utilities can still override them. */
+@keyframes blink { 50% { opacity: 0.3; } }
+
+@layer components {
+.lbl {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  padding: 5px 11px 1px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  color: var(--color-ink-soft);
+}
+
+.chip-dot::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: var(--color-accent);
+  animation: blink 1.6s infinite;
+}
+
+.chip-wal {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.chip-hot {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.chip-hot.chip-dot::before { background: var(--color-danger); }
+
+.hash {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.hash b {
+  color: var(--color-cyan);
+  font-weight: 400;
+}
+
+.pn {
+  position: relative;
+  isolation: isolate;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-panel);
+  padding: 24px;
+  transition: border-color 200ms;
+}
+
+/* Soft glow that follows the pointer (--mx/--my are set by Pointer). */
+.pn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), color-mix(in oklab, var(--color-accent) 10%, transparent), transparent 70%);
+}
+
+.pn:hover { border-color: var(--color-line-strong); }
+.pn:hover::before { opacity: 1; }
+.pn-hot::before { background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), color-mix(in oklab, var(--color-danger) 11%, transparent), transparent 70%); }
+.pn-urgent { border-color: var(--color-danger); background: var(--color-danger-soft); }
+
+@media (pointer: fine) {
+  a.pn, .lift { transition: transform 0.35s var(--ease), border-color 0.3s, box-shadow 0.35s; }
+  a.pn:hover, .lift:hover { transform: translateY(-4px); box-shadow: 0 18px 34px -24px rgb(14 26 51 / 0.55); }
+}
+
+/* Buttons: magnetic pull (--tx/--ty from Pointer), a sheen on primary, a press, and a nudged arrow. */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transform: translate(var(--tx, 0px), var(--ty, 0px));
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s, transform 0.25s var(--ease);
+}
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.3) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: transform 0.6s var(--ease);
+}
+.btn-primary:enabled:hover::after { transform: translateX(120%); }
+.btn:enabled:active { transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(0.97); }
+.btn .ar { display: inline-block; transition: transform 0.3s var(--ease); }
+.btn:enabled:hover .ar { transform: translateX(5px); }
+}
+
+/* Pill segmented control: native radios inside labels (data-on marks the chosen one). */
+.seg { display: inline-grid; grid-auto-flow: column; border: 1px solid var(--color-line-strong); border-radius: 999px; overflow: hidden; }
+.seg-o { position: relative; cursor: pointer; padding: 10px 22px; text-align: center; font-size: 13px; font-weight: 500; color: var(--color-muted); transition: color 0.2s, background-color 0.2s; }
+.seg-o:hover { color: var(--color-ink); }
+.seg-o[data-on="true"] { background: var(--color-accent); color: #fff; }
+.seg-o:has(:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: -3px; }
+@media (max-width: 767px) { .seg { display: grid; grid-auto-columns: 1fr; width: 100%; } .seg-o { min-height: 46px; display: grid; place-items: center; padding: 0 8px; font-size: 14px; } }
+
+/* Operative card (registration preview) */
+.idc { position: relative; padding: 26px; background: linear-gradient(150deg, color-mix(in oklab, var(--color-accent) 12%, var(--color-surface)), var(--color-surface) 55%); border: 1px solid var(--color-line-strong); border-radius: 16px; min-height: 300px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+.idc::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(115deg, transparent 0 14px, var(--color-line) 14px 15px); opacity: 0.5; }
+.idc > * { position: relative; }
+.idc .nm { font-weight: 600; font-size: 1.9rem; line-height: 1; letter-spacing: -0.02em; overflow-wrap: anywhere; min-height: 1em; }
+.idc .chipx { width: 46px; height: 34px; border: 1px solid var(--color-accent); position: relative; }
+.idc .chipx::before { content: ""; position: absolute; inset: 7px 10px; border-left: 1px solid var(--color-accent); border-right: 1px solid var(--color-accent); }
+.idc .chipx::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--color-accent); }
+.barcode { height: 30px; background: repeating-linear-gradient(90deg, var(--color-ink-soft) 0 2px, transparent 2px 4px, var(--color-ink-soft) 4px 5px, transparent 5px 9px, var(--color-ink-soft) 9px 12px, transparent 12px 14px); opacity: 0.6; }
+
+/* Orbit that trails the pointer, and the ripple on press. Fine pointers only. */
+.rip { position: fixed; z-index: 290; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; border: 1.5px solid var(--color-accent); pointer-events: none; animation: rip 0.7s var(--ease) both; }
+@media (pointer: coarse) { .rip { display: none; } }
+/* Logo mark: the dot orbits now and then; faster while its link is hovered. */
+.lg .lg-p { animation: lgo 9s linear infinite; }
+@keyframes lgo { 0%, 78% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+a:hover > .lg .lg-p { animation-duration: 1.6s; }
+.rl-logo { place-items: center; width: 64px; height: 64px; border-radius: 16px; transition: background-color 0.25s; }
+.rl-logo:hover { background: var(--color-accent-soft); }
+.kbd { font-family: var(--font-mono); font-size: 11px; color: var(--color-muted); border: 1px solid var(--color-line-strong); padding: 3px 7px; border-radius: 3px; background: none; transition: color 0.2s, border-color 0.2s; }
+.kbd:hover { color: var(--color-accent); border-color: var(--color-accent); }
+
+/* Command palette (native <dialog>); a bottom sheet on phones. */
+dialog.pal { margin: 14vh auto auto; width: min(560px, 92vw); max-width: none; padding: 0; overflow: hidden; border: 1px solid var(--color-line-strong); border-radius: 12px; background: var(--color-surface); color: var(--color-ink); box-shadow: 0 30px 60px -30px rgb(14 26 51 / 0.6); }
+.pal input { width: 100%; background: none; border: 0; border-bottom: 1px solid var(--color-line-strong); color: var(--color-ink); font: 500 18px var(--font-mono); padding: 18px 20px; outline: none; }
+.pal ul { list-style: none; margin: 0; padding: 6px; max-height: 340px; overflow: auto; }
+.pal li { padding: 11px 14px; border-radius: 6px; font-family: var(--font-mono); font-size: 14px; display: flex; justify-content: space-between; gap: 12px; cursor: pointer; }
+.pal li[aria-selected="true"] { background: var(--color-accent); color: #fff; }
+.pal li.empty { color: var(--color-muted); cursor: default; }
+@media (max-width: 767px) {
+  dialog.pal { margin: auto 0 0; width: 100%; border-radius: 18px 18px 0 0; padding-bottom: env(safe-area-inset-bottom); }
+  .pal li { padding: 15px 16px; font-size: 16px; }
+}
+
+::selection { background: color-mix(in oklab, var(--color-accent) 22%, transparent); }
+.landing ::selection { background: color-mix(in oklab, var(--l-cyan) 35%, transparent); }
+html { scrollbar-color: var(--color-line-strong) transparent; }
+textarea, input { caret-color: var(--color-accent); }
+
+/* Batch 9: results, leaderboard, rules, admin queue */
+.rad-poly { transform-origin: 50% 50%; animation: rp 1.1s var(--ease) 0.2s both; }
+.crit .bt i { display: block; height: 100%; background: var(--color-accent); transform-origin: left; animation: gr 1s var(--ease) both; animation-delay: calc(var(--d, 0) * 90ms + 300ms); }
+.lb-row, .q { animation: up 0.5s var(--ease) both; animation-delay: calc(var(--i, 0) * 40ms); }
+.rl-in { animation: up 0.7s var(--ease) both; animation-delay: calc(var(--i, 0) * 90ms); }
+.sb { height: 6px; background: var(--color-line); min-width: 120px; }
+.sb i { display: block; height: 100%; background: var(--color-accent); }
+.chipbtn { background: none; border: 1px solid var(--color-line-strong); border-radius: 999px; padding: 6px 14px; font-family: var(--font-mono); font-size: 12.5px; color: var(--color-ink-soft); transition: all 0.2s; }
+.chipbtn:hover { border-color: var(--color-accent); }
+.chipbtn[aria-pressed="true"] { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+
+/* Floating-label field (textarea variant) */
+.fld { position: relative; margin-top: 12px; }
+.fld textarea { width: 100%; background: var(--color-surface); border: 1px solid var(--color-line-strong); border-radius: 10px; color: var(--color-ink); padding: 30px 16px 12px; font-size: 15px; line-height: 1.6; resize: vertical; transition: border-color 0.2s, background-color 0.2s; }
+.fld textarea:focus { outline: none; border-color: var(--color-accent); background: var(--color-accent-soft); }
+.fld textarea:read-only { background: var(--color-paper); }
+.fld label { position: absolute; left: 16px; top: 10px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-muted); pointer-events: none; transition: color 0.2s; }
+.fld textarea:focus + label { color: var(--color-accent); }
+
+/* Batches 7-8: tray, integrity chain, tank, system graph, hold-to-lock */
+.tk { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 14px; border: 1px solid var(--color-line); border-radius: 10px; background: var(--color-surface); text-align: left; transition: border-color 0.2s, transform 0.3s var(--ease), opacity 0.2s; }
+button.tk:hover:not(:disabled) { border-color: var(--color-accent); transform: translateX(4px); }
+.tk .ic { width: 38px; height: 38px; border: 1px solid var(--color-line-strong); border-radius: 8px; display: grid; place-items: center; color: var(--color-accent); flex: none; }
+.tk.used { border-color: var(--color-accent); background: var(--color-accent-soft); }
+.tk-in { animation: up 0.6s var(--ease) both; animation-delay: calc(var(--i, 0) * 100ms + 200ms); }
+.chain { display: grid; grid-template-columns: repeat(14, 1fr); gap: 5px; margin-top: 14px; }
+.chain i { aspect-ratio: 1; border: 1px solid var(--color-line-strong); transition: background-color 0.25s, border-color 0.25s; }
+.chain i.ok { background: var(--color-success); border-color: var(--color-success); }
+.chain i.bad { background: var(--color-danger); border-color: var(--color-danger); }
+.big { font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; font-size: clamp(2.6rem, 5vw, 4.4rem); color: var(--color-accent); }
+.ln { stroke-dasharray: 6 6; animation: dash 1.2s linear infinite; }
+.hold { position: relative; overflow: hidden; }
+.hold .fill { position: absolute; inset: 0; background: var(--color-accent); opacity: 0.9; transform-origin: left; transform: scaleX(0); }
+.hold .t { position: relative; z-index: 1; }
+
+/* Timeline twist graphics (components/game/twistGraphics.tsx), viewBox 0 0 120 200 */
+.tg { display: block; width: 100%; height: auto; overflow: visible; }
+.tg .frame { fill: none; stroke: var(--color-danger); stroke-width: 2; }
+.tg .t { font-family: var(--font-mono); font-size: 9px; fill: var(--color-ink); font-weight: 500; }
+.tg .tick { stroke: var(--color-danger); stroke-width: 2; }
+/* generic twists: a gauge drains or fills from metric.from to metric.value */
+.tg .track { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; }
+.tg .gauge { fill: var(--color-cyan); opacity: 0.6; transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(var(--from)); transition: transform 2.6s var(--ease); }
+.go .gauge { transform: scaleY(var(--to)); }
+/* water: the tank drains to 15% */
+.tg .water { fill: var(--color-cyan); opacity: 0.55; transform-box: fill-box; transform-origin: 50% 100%; transition: transform 2.6s var(--ease); }
+.go .water { transform: scaleY(0.1667); }
+/* solar superstorm: flares arc in, satellites go dark one by one */
+.tg .sun { fill: var(--color-danger); }
+.tg .flare { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.2s var(--ease); transition-delay: calc(var(--i) * 150ms); }
+.go .flare { stroke-dashoffset: 0; }
+.tg .sat { fill: var(--color-cyan); transition: fill 0.6s var(--ease); transition-delay: calc(var(--i) * 60ms); }
+.go .sat { fill: var(--color-line-strong); }
+.tg .sx { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--i) * 60ms + 200ms); }
+.go .sx { opacity: 1; }
+/* metal shortage: bars shrink, cracks run through each tile */
+.tg .tile { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; }
+.tg .mb { fill: var(--color-cyan); opacity: 0.7; transform-box: fill-box; transform-origin: 0 50%; transition: transform 2s var(--ease); transition-delay: calc(var(--i) * 150ms); }
+.go .mb { transform: scaleX(var(--to)); }
+.tg .crack { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.4s var(--ease); transition-delay: calc(var(--i) * 150ms + 600ms); }
+.go .crack { stroke-dashoffset: 0; }
+/* crew shortage: half the figures fade and are struck out */
+.tg .pp { transition: opacity 0.7s var(--ease); transition-delay: calc(var(--i) * 120ms); }
+.tg .pp .g { fill: var(--color-ink-soft); }
+.go .pp.lost { opacity: 0.22; }
+.tg .ring, .tg .strike { opacity: 0; transition: opacity 0.6s var(--ease); transition-delay: calc(var(--i) * 120ms + 150ms); }
+.tg .ring { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-dasharray: 3 3; }
+.tg .strike { stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; }
+.go .lost .ring, .go .lost .strike { opacity: 1; }
+/* earth silence: the signal stops, the bars drop */
+.tg .earth { fill: var(--color-cyan); }
+.tg .mars { fill: var(--color-danger-soft); stroke: var(--color-danger); stroke-width: 2; }
+.tg .sig { stroke: var(--color-cyan); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 5 7; animation: tg-flow 0.9s linear infinite; transition: stroke 0.8s var(--ease); }
+@keyframes tg-flow { to { stroke-dashoffset: -12; } }
+.go .sig { animation: none; stroke: var(--color-line-strong); }
+.tg .sb { fill: var(--color-cyan); transform-box: fill-box; transform-origin: 50% 100%; transition: transform 0.6s var(--ease), fill 0.6s var(--ease); transition-delay: calc(var(--i) * 350ms + 300ms); }
+.go .sb { transform: scaleY(0.1); fill: var(--color-danger); }
+@media (prefers-reduced-motion: reduce) {
+  .tg, .tg * { transition: none !important; animation: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rip { display: none; }
+  .tk-in, .ln, .rad-poly, .crit .bt i, .lb-row, .q, .rl-in { animation: none; }
+  .chain i { transition: none; }
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+  .chrono-primary, .chrono-secondary, .chrono-inner, .chrono-orbit, .chrono-orbit-body,
+  .star-layer, .nebula { animation: none !important; }
+  .star-layer, .parallax-dial, .parallax-copy { translate: none !important; }
+  .reveal-armed [data-reveal] { opacity: 1; transform: none; }
+  .chip-dot::before { animation: none; }
+  .view-enter > * { animation: none; }
+    .lg .lg-p { animation: none; }
+  .toast-up { animation: none; }
+  .flash, .seg-lo, .out-flash, .log-row, .strip .stamp { animation: none; }
+  .btn-primary::after { display: none; }
+  .landing .ticker > div { animation: none; }
+  .landing .ticker { overflow-x: auto; }
+  .landing .rb i { transition: none; }
+  .chrono svg animate, .chrono svg animateTransform, .wait-ring animate { display: none; }
+}
+
+/* Low-power devices: keep the dial turning, drop the drifting layers and the blurred nebulae. */
+.landing[data-lite] .star-layer,
+.landing[data-lite] .chrono-secondary,
+.landing[data-lite] .chrono-inner { animation: none; }
+.landing[data-lite] .nebula { display: none; }
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+dialog[open] { animation: dialog-in 360ms cubic-bezier(0.16, 1, 0.3, 1); }
+dialog[open]::backdrop { animation: backdrop-in 300ms ease-out; }
+
+dialog::backdrop {
+  background: rgb(3 7 20 / 0.6);
+  backdrop-filter: blur(3px);
+}
+
+/* Organiser credit strip: frosted glass that follows the page underneath (light game screens, dark or light landing). */
+.credit { background: rgb(255 255 255 / 0.55); border-color: rgb(14 26 51 / 0.1); color: var(--color-ink-soft); }
+.credit b { color: var(--color-ink); }
+body:has(.landing) { background: #050a1c; }
+body:has(.landing) .credit { background: rgb(170 200 240 / 0.07); border-color: rgb(170 200 240 / 0.14); color: #c3cfe6; }
+body:has(.landing) .credit b { color: #f3f6fc; }
+body:has(.landing[data-theme="light"]) { background: #eef2f9; }
+body:has(.landing[data-theme="light"]) .credit { background: rgb(255 255 255 / 0.55); border-color: rgb(30 55 110 / 0.14); color: rgb(28 42 76 / 0.8); }
+body:has(.landing[data-theme="light"]) .credit b { color: #0b1630; }
+
+/* Projector (#/present): zoomed so a 1080p projector reads from the back of the room. The host's Projector fit sets --present-zoom and the --safe-* insets on <html>
+   (1.25 and 0 when unset). The credit strip (about 28 px, header only) sits outside it. No pointer on the projector. */
+.present {
+  zoom: var(--present-zoom, 1.25);
+  width: calc((100vw - var(--safe-l, 0px) - var(--safe-r, 0px)) / var(--present-zoom, 1.25));
+  height: calc((100svh - 28px - var(--safe-t, 0px) - var(--safe-b, 0px)) / var(--present-zoom, 1.25));
+  overflow: hidden;
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+/* Projector fit: content (and the credit strip) sit inside the safe area; body background and the fixed starfield still fill the screen. */
+body:has(.present), body:has(.projector-welcome) { padding: var(--safe-t, 0px) var(--safe-r, 0px) var(--safe-b, 0px) var(--safe-l, 0px); }
+.projector-welcome { height: calc(100svh - 28px - var(--safe-t, 0px) - var(--safe-b, 0px)); }
+.present-guides { position: fixed; inset: 0; z-index: 100; pointer-events: none; border: 6px solid var(--color-danger); }
+.present-safe { position: absolute; inset: var(--safe-t, 0px) var(--safe-r, 0px) var(--safe-b, 0px) var(--safe-l, 0px); outline: 4px dashed var(--color-accent); outline-offset: -4px; background-image: linear-gradient(to right, rgb(20 90 255 / 0.18) 1px, transparent 1px), linear-gradient(to bottom, rgb(20 90 255 / 0.18) 1px, transparent 1px); background-size: 10% 10%; }
+.present-safe span { position: absolute; top: 16px; left: 16px; padding: 6px 12px; font: 600 1.25rem var(--font-mono); background: var(--color-ink); color: #fff; }
+.present-screen { height: 100%; padding: 36px 48px; }
+.present .lbl { font-size: 1rem; }
+html:has(.present), html:has(.projector-welcome) { cursor: none; }
+/* Projector Welcome: title beside a planet, eras orbiting it on tilted paths (SVG animateMotion keeps labels upright), aurora and shooting stars behind. */
+.welcome-shots { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+.welcome-orbits { position: absolute; left: 50%; top: 50%; width: 140%; height: 140%; translate: -50% -50%; overflow: visible; pointer-events: none; }
+.welcome-orbit { fill: none; stroke: rgb(163 198 239 / 0.35); stroke-width: 2; stroke-dasharray: 4 10; }
+.welcome-body circle { fill: #fff; filter: drop-shadow(0 0 10px rgb(163 198 239 / 0.95)) drop-shadow(0 0 26px rgb(163 198 239 / 0.5)); }
+.welcome-body text { fill: var(--l-fg); font-family: var(--font-display); font-size: 34px; letter-spacing: 0.06em; }
+.welcome-aurora { position: absolute; inset: -20%; z-index: 0; pointer-events: none; filter: blur(70px); opacity: 0.8; }
+.welcome-aurora i { position: absolute; width: 55%; height: 38%; border-radius: 50%; mix-blend-mode: screen; animation: welcome-drift 14s ease-in-out infinite alternate; }
+.welcome-aurora i:nth-child(1) { left: 5%; top: 15%; background: radial-gradient(closest-side, rgb(163 198 239 / 0.4), transparent); }
+.welcome-aurora i:nth-child(2) { right: 0; top: 40%; background: radial-gradient(closest-side, rgb(236 96 140 / 0.35), transparent); animation-duration: 18s; animation-delay: -6s; }
+.welcome-aurora i:nth-child(3) { left: 30%; bottom: 0; background: radial-gradient(closest-side, rgb(120 150 255 / 0.3), transparent); animation-duration: 22s; animation-delay: -11s; }
+.welcome-mark { animation: welcome-glow 5s ease-in-out infinite; }
+.welcome-sweep { background: linear-gradient(100deg, var(--l-accent) 30%, #fff 50%, var(--l-accent) 70%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: welcome-sweep 5s linear infinite; }
+@keyframes welcome-drift { 50% { transform: translate3d(14%, -8%, 0) scale(1.3) rotate(8deg); } to { transform: translate3d(-6%, 10%, 0) scale(0.95) rotate(-6deg); } }
+.welcome-dust { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.welcome-dust i { position: absolute; width: var(--s); height: var(--s); border-radius: 50%; background: #fff; box-shadow: 0 0 8px 2px rgb(163 198 239 / 0.7); opacity: 0; animation: welcome-dust var(--d) linear var(--delay) infinite; }
+@keyframes welcome-dust { 0% { opacity: 0; transform: translate3d(0, 0, 0); } 15% { opacity: 0.9; } 50% { opacity: 0.3; } 70% { opacity: 0.85; } 100% { opacity: 0; transform: translate3d(var(--dx), -160px, 0); } }
+.welcome-halo { animation: welcome-halo 6s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+@keyframes welcome-halo { 50% { transform: scale(1.12); opacity: 0.7; } }
+@keyframes welcome-glow { 0%, 100% { filter: drop-shadow(0 0 0.6rem rgb(163 198 239 / 0.15)); } 50% { filter: drop-shadow(0 0 2.4rem rgb(163 198 239 / 0.5)); } }
+@keyframes welcome-sweep { from { background-position: 150% 0; } to { background-position: -100% 0; } }
+@media (prefers-reduced-motion: reduce) { .welcome-aurora i, .welcome-mark, .welcome-sweep, .welcome-halo { animation: none; } .welcome-dust { display: none; } }
+.present-ring {
+  width: 16rem;
+  height: 16rem;
+  border-radius: 9999px;
+  border: 3px solid var(--color-accent);
+  animation: present-pulse 2.4s ease-out infinite;
+}
+@keyframes present-pulse {
+  0% { transform: scale(0.9); opacity: 0.9; }
+  100% { transform: scale(1.15); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .present-ring { animation: none; } }
+/* Shells fill the window below the credit strip; `fit` shells never scroll the page. */
+/* GameShell `fit`: shell fills the window below the 28px credit strip; the rail must not overflow it. */
+#root:has(> .fit-shell) { height: 100svh; display: flex; flex-direction: column; }
+#root > .fit-shell { flex: 1; min-height: 0; }
+#root:has(> .page-shell) { min-height: 100svh; display: flex; flex-direction: column; }
+#root > .page-shell { flex: 1; }
+@media (min-width: 768px) { .fit-shell > :first-child { height: 100%; } }

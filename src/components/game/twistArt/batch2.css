@@ -1,0 +1,46 @@
+/* Twist art, batch 2 (see batch2.tsx). Selectors start with .tg and a per-twist class prefix; the end state hangs off .go. */
+/* quake swarm: calm trace gives way to a dense one, the ground cracks */
+.tg .qs-frame, .tg .qs-ground { fill: none; stroke: var(--color-ink); stroke-width: 2; stroke-linejoin: round; }
+.tg .qs-base { stroke: var(--color-line); stroke-width: 2; }
+.tg .qs-calm { fill: none; stroke: var(--color-cyan); stroke-width: 2; stroke-linejoin: round; transition: opacity 0.8s var(--ease); }
+.go .qs-calm { opacity: 0.25; }
+.tg .qs-dense, .tg .qs-crack { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2s var(--ease); }
+.tg .qs-crack { transition: stroke-dashoffset 0.8s var(--ease) 1.6s; }
+.go .qs-dense, .go .qs-crack { stroke-dashoffset: 0; }
+/* oxygen leak: bubbles escape the crack, gauge drops 21 -> 15 of 25 */
+.tg .ol-dome, .tg .ol-base { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; stroke-linejoin: round; }
+.tg .ol-crack { fill: none; stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tg .ol-b { fill: none; stroke: var(--color-cyan); stroke-width: 2; animation: ol-rise 2.4s linear infinite; animation-delay: calc(var(--i) * -480ms); }
+@keyframes ol-rise { 0% { transform: translate(0, 0); opacity: 1; } 100% { transform: translate(14px, -46px); opacity: 0; } }
+.tg .ol-track { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; }
+.tg .ol-fill { fill: var(--color-cyan); opacity: 0.7; transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0.84); transition: transform 2.4s var(--ease); }
+.go .ol-fill { transform: scaleY(0.6); }
+.tg .ol-tick { stroke: var(--color-ink); stroke-width: 2; }
+/* ai recall: traces go dark one by one, tag appears */
+.tg .ai-head { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; }
+.tg .ai-ant, .tg .ai-mouth { stroke: var(--color-ink); stroke-width: 2; stroke-linecap: round; }
+.tg .ai-lit { fill: var(--color-cyan); stroke: var(--color-cyan); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: fill 0.5s var(--ease), stroke 0.5s var(--ease); transition-delay: calc(var(--i) * 190ms); }
+.tg .ai-tr { fill: none; }
+.go .ai-lit { fill: var(--color-line); stroke: var(--color-line-strong); }
+.go .ai-tr { fill: none; }
+.tg .ai-tag { opacity: 0; transition: opacity 0.5s var(--ease) 2s; }
+.tg .ai-tag rect { fill: var(--color-danger-soft); stroke: var(--color-danger); stroke-width: 2; }
+.go .ai-tag { opacity: 1; }
+/* population boom: 12 more settlers arrive and overflow outside the bunks */
+.tg .pb-wall { fill: none; stroke: var(--color-ink); stroke-width: 2; }
+.tg .pb-slot { fill: var(--color-surface); stroke: var(--color-line-strong); stroke-width: 2; }
+.tg .pb-old { fill: var(--color-ink-soft); }
+.tg .pb-new { fill: var(--color-danger); opacity: 0; transform: translateX(26px); transition: opacity 0.5s var(--ease), transform 0.7s var(--ease); transition-delay: calc(var(--i) * 140ms); }
+.go .pb-new { opacity: 1; transform: none; }
+/* cold snap: mercury falls -60 -> -120 of 0..-140, frost creeps over the window */
+.tg .cs-tube, .tg .cs-bulb { fill: var(--color-surface); stroke: var(--color-ink); stroke-width: 2; }
+.tg .cs-bulb { fill: var(--color-danger); }
+.tg .cs-hg { fill: var(--color-danger); transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0.5714); transition: transform 2.4s var(--ease); }
+.go .cs-hg { transform: scaleY(0.1429); }
+.tg .cs-tick { stroke: var(--color-line-strong); stroke-width: 2; }
+.tg .cs-big { stroke: var(--color-ink); }
+.tg .cs-pane { fill: var(--color-cyan); fill-opacity: 0; stroke: var(--color-ink); stroke-width: 2; transition: fill-opacity 2.4s var(--ease); }
+.go .cs-pane { fill-opacity: 0.3; }
+.tg .cs-mull { fill: none; stroke: var(--color-ink); stroke-width: 2; }
+.tg .cs-frost { fill: none; stroke: var(--color-cyan); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2s var(--ease); transition-delay: calc(var(--i) * 300ms); }
+.go .cs-frost { stroke-dashoffset: 0; }

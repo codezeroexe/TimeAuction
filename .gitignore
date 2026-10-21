@@ -1,0 +1,38 @@
+# This machine's global git ignore hides every file (**/*); re-include this repo's files.
+# Later lines in this file still ignore what they name.
+!**/*
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Event server data (registrations, runs, scores)
+event-data
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Build outputs and working material that are not part of the source
+release
+screenshots
+mockups
+twist-gallery.html
+.claude/settings.local.json
