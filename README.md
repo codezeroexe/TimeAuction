@@ -57,17 +57,14 @@ Each solution gets a score out of 100 from the judges, plus or minus a few point
 | Scalability | 15 |
 | Explanation | 10 |
 
-## The poster
+## Built with
 
-<p align="center">
-  <img src="docs/brand/poster.jpg" alt="TimeAuction event poster: Engineering Across Time. The Future Is Yours to Engineer. Register here." width="480">
-</p>
-
-## Hosting an event
-
-Download the latest build from the [Releases page](https://github.com/codezeroexe/TimeAuction/releases/latest), unzip it on the host PC and double-click `start-event.bat`. Players open the address it shows from any PC on the same network.
-
-The full step-by-step guide for organisers is in [docs/EVENT-GUIDE.md](docs/EVENT-GUIDE.md).
+| | |
+|---|---|
+| **App** | React 19 · TypeScript · Vite |
+| **Styling** | Tailwind CSS v4 |
+| **Event server** | Node.js with no extra packages, live updates over Server-Sent Events |
+| **Quality** | Node's built-in test runner · oxlint |
 
 ---
 
